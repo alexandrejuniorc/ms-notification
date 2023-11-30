@@ -1,7 +1,7 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Controller } from '@nestjs/common';
 
-import { EventPattern } from '@nestjs/microservices';
+import { MessagePattern } from '@nestjs/microservices';
 
 type NotificationDTO = {
   name: string;
@@ -16,18 +16,18 @@ type NotificationDTO = {
 export class AppController {
   constructor(private mailerService: MailerService) {}
 
-  @EventPattern('task-notification')
+  @MessagePattern('topic-task-notification')
   async taskNotification(data: NotificationDTO) {
     await this.mailerService.sendMail({
       to: data.email,
       from: 'taskmanager@nestjsapi.com',
-      subject: 'Notificação de Tarefa',
+      subject: 'Notificação de Tarefa - Enviado com Kafka',
       text: `Olá ${data.name}! Você tem a atividade ${data.title} que comecará em ${data.startsAt} e terminará em ${data.endsAt}. ${data.description}`,
       html: `
       <body>
         <h1>Olá ${data.name}!</h1>
 
-        <span>Você tem uma tarefa para hoje!</span>
+        <span>Você tem uma tarefa para hoje</span>
         <br/>
         <span>${data.title}</span>
         <br/>
